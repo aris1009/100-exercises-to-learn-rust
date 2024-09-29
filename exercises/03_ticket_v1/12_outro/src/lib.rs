@@ -11,3 +11,74 @@
 // Integration here has a very specific meaning: they test **the public API** of your project.
 // You'll need to pay attention to the visibility of your types and methods; integration
 // tests can't access private or `pub(crate)` items.
+pub struct Order {
+    product_name: String,
+    quantity: isize,
+    unit_price: isize,
+}
+
+impl Order {
+    fn validate_product_name(n: &String) {
+        if n.is_empty() {
+            panic!("Product name cannot be empty!");
+        }
+        if n.len() > 300 {
+            panic!("Product name cannot be longer than 300 characters!")
+        }
+    }
+
+    fn validate_quantity(n: isize) {
+        if n <= 0 {
+            panic!("Quantity must be greater than zero!")
+        }
+    }
+
+    fn validate_unit_price(n: isize) {
+        if n <= 0 {
+            panic!("Unit price must be greater than zero!")
+        }
+    }
+
+    pub fn new(product_name: String, quantity: isize, unit_price: isize) -> Order {
+        Order::validate_product_name(&product_name);
+        Order::validate_quantity(quantity);
+        Order::validate_unit_price(unit_price);
+
+        Order {
+            product_name,
+            quantity,
+            unit_price,
+        }
+    }
+
+    pub fn total(&self) -> isize {
+        self.quantity * self.unit_price
+    }
+
+    pub fn product_name(&self) -> &String {
+        &self.product_name
+    }
+
+    pub fn quantity(&self) -> &isize {
+        &self.quantity
+    }
+
+    pub fn unit_price(&self) -> &isize {
+        &self.unit_price
+    }
+
+    pub fn set_product_name(&mut self, n: String) {
+        Order::validate_product_name(&n);
+        self.product_name = n;
+    }
+
+    pub fn set_quantity(&mut self, n: isize) {
+        Order::validate_quantity(n);
+        self.quantity = n;
+    }
+
+    pub fn set_unit_price(&mut self, n: isize) {
+        Order::validate_unit_price(n);
+        self.unit_price = n;
+    }
+}
