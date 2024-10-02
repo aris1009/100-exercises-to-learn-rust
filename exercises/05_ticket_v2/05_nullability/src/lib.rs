@@ -36,7 +36,11 @@ impl Ticket {
         }
     }
     pub fn assigned_to(&self) -> Option<&String> {
-        todo!()
+        if let Status::InProgress { assigned_to: engineer } = &self.status {
+            Some(engineer)
+        } else {
+            None
+        }
     }
 }
 
