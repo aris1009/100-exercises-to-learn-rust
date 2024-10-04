@@ -10,12 +10,36 @@
 //
 // We expect `fibonacci(0)` to return `0`, `fibonacci(1)` to return `1`,
 // `fibonacci(2)` to return `1`, and so on.
+
+// rustup toolchain install nightly
+#![feature(thread_local)]
+
+#[thread_local]
+static mut memo: Vec<Option<u32>> = Vec::new();
+
 pub fn fibonacci(n: u32) -> u32 {
-    // TODO: implement the `fibonacci` function
-    //
-    // Hint: use a `Vec` to memoize the results you have already calculated
-    // so that you don't have to recalculate them several times.
-    todo!()
+    let n = n as usize;
+
+    unsafe {
+        if memo.get(0) == None {
+            memo.push(Some(0));
+            memo.push(Some(1));
+        }
+        if let Some(Some(result)) = memo.get(n) {
+            return *result;
+        }
+        if memo.len() <= n {
+            memo.resize(n + 1, None);
+        }
+
+        for i in 2..=n {
+            let n1 = (i - 1).try_into().unwrap();
+            let n2 = (i - 2).try_into().unwrap();
+            memo[i] = Some(fibonacci(n1) + fibonacci(n2));
+        }
+
+        memo[n].unwrap()
+    }
 }
 
 #[cfg(test)]
